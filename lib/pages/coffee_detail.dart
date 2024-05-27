@@ -16,7 +16,6 @@ class CoffeeDetailPage extends StatefulWidget {
 late SharedPreferences pref;
 double totalPrice = 0;
 
-
 class _CoffeeDetailPageState extends State<CoffeeDetailPage> {
   String? flavorsList() {
     if (widget.data.flavorProfile != null &&
@@ -101,7 +100,7 @@ class _CoffeeDetailPageState extends State<CoffeeDetailPage> {
               width: 200,
               child: ElevatedButton(
                   onPressed: () {
-                    _showPopup(context, widget.data,1);
+                    _showPopup(context, widget.data, 1);
                   },
                   child: const Text("Beli")),
             )
@@ -114,9 +113,9 @@ class _CoffeeDetailPageState extends State<CoffeeDetailPage> {
 
 class PopupContent extends StatefulWidget {
   final double price;
-  final Function(int) onCurrencyChange; // Add this callback function
+  final Function(int) onCurrencyChange;
 
-  PopupContent({required this.price, required this.onCurrencyChange}); // Update the constructor
+  PopupContent({required this.price, required this.onCurrencyChange});
 
   @override
   _PopupContentState createState() => _PopupContentState();
@@ -140,6 +139,8 @@ class _PopupContentState extends State<PopupContent> {
         totalPrice = usdToIdr(widget.price) * amount;
       } else if (selectedButtonIndex == 3) {
         totalPrice = usdToEur(widget.price) * amount;
+      } else if (selectedButtonIndex == 4) {
+        totalPrice = usdToYen(widget.price) * amount;
       }
     });
   }
@@ -148,14 +149,14 @@ class _PopupContentState extends State<PopupContent> {
     setState(() {
       selectedButtonIndex = index;
       _updateTotalPrice();
-      widget.onCurrencyChange(index); // Notify the parent of the change
+      widget.onCurrencyChange(index);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 160,
+      height: 220,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -176,6 +177,11 @@ class _PopupContentState extends State<PopupContent> {
               if (selectedButtonIndex == 3)
                 Text(
                   "€${totalPrice.toStringAsFixed(2)}",
+                  style: const TextStyle(fontSize: 24),
+                ),
+              if (selectedButtonIndex == 4)
+                Text(
+                  "¥${totalPrice.toStringAsFixed(2)}",
                   style: const TextStyle(fontSize: 24),
                 ),
             ],
@@ -242,44 +248,87 @@ class _PopupContentState extends State<PopupContent> {
             ],
           ),
           const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+          Table(
+            columnWidths: const <int, TableColumnWidth>{
+              0: FlexColumnWidth(),
+              1: FlexColumnWidth(),
+            },
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  _onCurrencyChange(1);
-                },
-                style: selectedButtonIndex == 1
-                    ? ElevatedButton.styleFrom(backgroundColor: Colors.green)
-                    : ElevatedButton.styleFrom(backgroundColor: Colors.grey),
-                child: const Text(
-                  'USD',
-                  style: TextStyle(color: Colors.black),
-                ),
+              TableRow(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _onCurrencyChange(1);
+                      },
+                      style: selectedButtonIndex == 1
+                          ? ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green)
+                          : ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey),
+                      child: const Text(
+                        'USD',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _onCurrencyChange(2);
+                      },
+                      style: selectedButtonIndex == 2
+                          ? ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green)
+                          : ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey),
+                      child: const Text(
+                        'IDR',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              ElevatedButton(
-                onPressed: () {
-                  _onCurrencyChange(2);
-                },
-                style: selectedButtonIndex == 2
-                    ? ElevatedButton.styleFrom(backgroundColor: Colors.green)
-                    : ElevatedButton.styleFrom(backgroundColor: Colors.grey),
-                child: const Text(
-                  'IDR',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  _onCurrencyChange(3);
-                },
-                style: selectedButtonIndex == 3
-                    ? ElevatedButton.styleFrom(backgroundColor: Colors.green)
-                    : ElevatedButton.styleFrom(backgroundColor: Colors.grey),
-                child: const Text(
-                  'EUR',
-                  style: TextStyle(color: Colors.black),
-                ),
+              TableRow(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _onCurrencyChange(3);
+                      },
+                      style: selectedButtonIndex == 3
+                          ? ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green)
+                          : ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey),
+                      child: const Text(
+                        'EUR',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _onCurrencyChange(4);
+                      },
+                      style: selectedButtonIndex == 4
+                          ? ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green)
+                          : ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey),
+                      child: const Text(
+                        'YEN',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -288,7 +337,6 @@ class _PopupContentState extends State<PopupContent> {
     );
   }
 }
-
 
 void _showPopup(BuildContext context, Coffee coffee, int selectedButtonIndex) {
   showDialog(
@@ -306,6 +354,12 @@ void _showPopup(BuildContext context, Coffee coffee, int selectedButtonIndex) {
           ElevatedButton(
             onPressed: () {
               addToBuyHistory(coffee.name!, totalPrice, selectedButtonIndex);
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text("Coffe has been buyed"),
+                backgroundColor: Colors.green,
+                duration: Duration(seconds: 2),
+              ));
+
               Navigator.of(context).pop(); // Close the dialog
             },
             child: const Center(child: Text('Buy')),
@@ -316,6 +370,11 @@ void _showPopup(BuildContext context, Coffee coffee, int selectedButtonIndex) {
   );
 }
 
+double usdToYen(double usd) {
+  double yen;
+  yen = usd * 156.88;
+  return yen;
+}
 
 double usdToIdr(double usd) {
   double idr;
@@ -329,50 +388,53 @@ double usdToEur(double usd) {
   return eur;
 }
 
-double idrToUsd(double idr) {
-  double usd;
-  usd = idr * 0.000062;
-  return usd;
-}
+// double idrToUsd(double idr) {
+//   double usd;
+//   usd = idr * 0.000062;
+//   return usd;
+// }
 
-double idrToEur(double idr) {
-  double eur;
-  eur = idr * 0.000057;
-  return eur;
-}
+// double idrToEur(double idr) {
+//   double eur;
+//   eur = idr * 0.000057;
+//   return eur;
+// }
 
-double eurToUsd(double eur) {
-  double usd;
-  usd = eur * 1.08;
-  return usd;
-}
+// double eurToUsd(double eur) {
+//   double usd;
+//   usd = eur * 1.08;
+//   return usd;
+// }
 
-double eurToIdr(double eur) {
-  double idr;
-  idr = eur * 17406.42;
-  return idr;
-}
+// double eurToIdr(double eur) {
+//   double idr;
+//   idr = eur * 17406.42;
+//   return idr;
+// }
 
-void addToBuyHistory(String coffeeName, double coffeePrice, int selectedCurrency) async {
+void addToBuyHistory(
+    String coffeeName, double coffeePrice, int selectedCurrency) async {
   // Obtain shared preferences instance
   pref = await SharedPreferences.getInstance();
-  
+
   // Open the Hive box for users
   var userBox = await Hive.openBox<User>("userBox");
-  
+
   // Determine the currency based on the selectedCurrency index
   String currency;
   if (selectedCurrency == 1) {
     currency = "USD";
   } else if (selectedCurrency == 2) {
     currency = "IDR";
-  } else {
+  } else if (selectedCurrency == 3) {
     currency = "EUR";
+  } else {
+    currency = "YEN";
   }
 
   // Get the current user's index from shared preferences
   int accIndex = pref.getInt("accIndex")!;
-  
+
   // Create a new Coffee instance
   Coffee coffee = Coffee(
     name: coffeeName,
@@ -393,4 +455,3 @@ void addToBuyHistory(String coffeeName, double coffeePrice, int selectedCurrency
   // Close the Hive box
   await userBox.close();
 }
-

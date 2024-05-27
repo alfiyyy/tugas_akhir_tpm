@@ -225,7 +225,7 @@ class _ProfilePageState extends State<ProfilePage> {
               width: 200,
               child: ElevatedButton(
                 onPressed: () {
-                  showbuyHistory();
+                  // showbuyHistory();
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return const OrderHistoryPage();
                   }));
@@ -351,11 +351,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-void showbuyHistory() async {
-  pref = await SharedPreferences.getInstance();
-  var userBox = await Hive.openBox<User>("userBox");
+// void showbuyHistory() async {
+//   pref = await SharedPreferences.getInstance();
+//   var userBox = await Hive.openBox<User>("userBox");
 
-  int accIndex = pref.getInt("accIndex")!;
+//   int accIndex = pref.getInt("accIndex")!;
 
-  print(userBox.getAt(accIndex)?.coffees);
-}
+//   print(userBox.getAt(accIndex)?.coffees);
+// }

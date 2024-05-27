@@ -33,6 +33,25 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
     await userBox.close();
   }
 
+  void deleteCoffee(int index) async {
+    pref = await SharedPreferences.getInstance();
+    var userBox = await Hive.openBox<User>("userBox");
+
+    int accIndex = pref.getInt("accIndex")!;
+    User? currentUser = userBox.getAt(accIndex);
+
+    if (currentUser != null) {
+      setState(() {
+        coffeeList.removeAt(index);
+      });
+
+      currentUser.coffees = coffeeList;
+      await userBox.putAt(accIndex, currentUser);
+    }
+
+    await userBox.close();
+  }
+
   String getPriceText(Coffee coffee) {
     switch (coffee.region) {
       case "USD":
@@ -41,6 +60,8 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
         return "Price : Rp ${coffee.price?.toStringAsFixed(2)}";
       case "EUR":
         return "Price : € ${coffee.price?.toStringAsFixed(2)}";
+      case "YEN":
+        return "Price : ¥ ${coffee.price?.toStringAsFixed(2)}";
       default:
         return "";
     }
@@ -69,13 +90,8 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  if (coffeeList[index].imageUrl != null)
-                    Container(
-                      width: 100,
-                      child: Image.network("${coffeeList[index].imageUrl}"),
-                    ),
                   Container(
-                    width: coffeeList[index].imageUrl != null ? 280 : 380,
+                    width: 300,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -90,6 +106,12 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                         Text(getPriceText(coffeeList[index])),
                       ],
                     ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      deleteCoffee(index);
+                    },
+                    icon: const Icon(Icons.delete),
                   ),
                 ],
               ),

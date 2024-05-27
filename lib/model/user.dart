@@ -23,7 +23,7 @@ class User extends HiveObject {
   final String password;
 
   @HiveField(5)
-  final List<Coffee> coffees;
+  List<Coffee> coffees;
   
   @HiveField(6)
    String? profilePicPath;

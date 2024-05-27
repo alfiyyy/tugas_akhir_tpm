@@ -247,17 +247,6 @@ class _SignupPageState extends State<SignupPage> {
                                         birth != "" &&
                                         password != "") {
                                       registerUser();
-
-                                      // User user = User(username: username,email: email,birth: birth,password: password)
-                                      // loginData.setString('username', username);
-                                      // loginData.setString('email', email);
-                                      // loginData.setString('birth', birth);
-                                      // loginData.setString('password', password);
-                                      // loginData.setStringList('users', user);
-                                      // Navigator.pushReplacement(context,
-                                      //     MaterialPageRoute(builder: (context) {
-                                      //   return HomePage();
-                                      // }));
                                     }
                                   }
                                 },
